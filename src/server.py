@@ -1,5 +1,5 @@
 import os
-from schemas import TodoCreateRequest, TodoUpdateRequest
+from schemas import TodoCreateRequest
 
 from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -63,12 +63,12 @@ def create_todo(todo: TodoCreateRequest, db: Session = Depends(get_db)):
 
 
 @app.put("/api/todos/{todo_id}", response_model=TodoResponse)
-def update_todo(todo_id: int, todo: TodoUpdateRequest, db: Session = Depends(get_db)):
+def update_todo(todo_id: int, db: Session = Depends(get_db)):
     db_todo = db.query(TodoModel).filter(TodoModel.id == todo_id).first()
     if db_todo is None:
         return {"error": "Todo not found"}
-    db_todo.title = todo.title
-    db_todo.done = todo.done
+    
+    db_todo.done = not db_todo.done
     db.commit()
     db.refresh(db_todo)
     return db_todo

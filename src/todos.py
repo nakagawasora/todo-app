@@ -16,9 +16,7 @@ todos: List[Todo] = [
 # --- 一覧を表示する関数 ---
 def show_todos(todos: List[Todo]) -> None:
     for todo in todos:
-        # 三項演算子の書き方が異なる
         status = "✅" if todo["done"] else "⬜"
-        # f-string (テンプレートリテラル)
         print(f"{status} [{todo['id']}] {todo['title']}")
 
 

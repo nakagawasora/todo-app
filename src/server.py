@@ -80,7 +80,7 @@ def update_todo(todo_id: int, db: Session = Depends(get_db)):
     db_todo = db.query(TodoModel).filter(TodoModel.id == todo_id).first()
     if db_todo is None:
         return {"error": "Todo not found"}
-    
+
     db_todo.done = not db_todo.done
     db.commit()
     db.refresh(db_todo)

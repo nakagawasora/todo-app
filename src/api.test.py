@@ -4,6 +4,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Generator
 
 import httpx
 import pytest
@@ -19,7 +20,7 @@ def find_free_port() -> int:
 
 
 @pytest.fixture
-def api_url(tmp_path: Path) -> str:
+def api_url(tmp_path: Path) -> Generator[str, None, None]:
     port = find_free_port()
     env = os.environ.copy()
     env["PYTHONPATH"] = str(PROJECT_ROOT)

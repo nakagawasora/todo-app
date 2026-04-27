@@ -2,6 +2,7 @@ import os
 from schemas import TodoCreateRequest
 
 from fastapi import Depends, FastAPI
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sqlalchemy import String, create_engine
@@ -55,7 +56,19 @@ def read_todos(db: Session = Depends(get_db)):
 
 @app.post("/api/todos", response_model=TodoResponse)
 def create_todo(todo: TodoCreateRequest, db: Session = Depends(get_db)):
+    if not todo.title or not isinstance(todo.title, str) or todo.title.strip() == "":
+        return JSONResponse(
+            status_code=400,
+            content={"error": "タイトルは必須です"},
+        )
+    if len(todo.title) > 100:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "タイトルは100文字以内にしてください"},
+        )
+
     new_todo = TodoModel(title=todo.title, done=todo.done)
+
     db.add(new_todo)
     db.commit()
     db.refresh(new_todo)

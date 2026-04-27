@@ -5,8 +5,8 @@ from pathlib import Path
 
 module_path = Path(__file__).with_name("validate.py")
 spec = importlib.util.spec_from_file_location("validate_module", module_path)
-validate = importlib.util.module_from_spec(spec)
 assert spec is not None and spec.loader is not None
+validate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(validate)
 
 
